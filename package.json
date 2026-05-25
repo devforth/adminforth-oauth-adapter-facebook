@@ -1,5 +1,5 @@
 {
-  "name": "@adminforth/facebook-oauth-adapter",
+  "name": "@adminforth/oauth-adapter-facebook",
   "version": "1.0.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -37,7 +37,7 @@
       [
         "semantic-release-slack-bot",
         {
-          "packageName": "@adminforth/facebook-oauth-adapter",
+          "packageName": "@adminforth/oauth-adapter-facebook",
           "notifyOnSuccess": true,
           "notifyOnFail": true,
           "slackIcon": ":package:",
