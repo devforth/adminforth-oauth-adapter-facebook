@@ -1,5 +1,15 @@
 import type { OAuth2Adapter } from "adminforth";
 
+type OAuth2UserInfoLocal = {
+  email: string;
+  provider?: string;
+  subject?: string;
+  phone?: string;
+  meta?: Record<string, any>;
+  fullName?: string;
+  profilePictureUrl?: string | null;
+  externalUserId?: string | number | null;
+};
 export default class AdminForthAdapterFacebookOauth2 implements OAuth2Adapter {
     private clientID: string;
     private clientSecret: string;
@@ -22,7 +32,7 @@ export default class AdminForthAdapterFacebookOauth2 implements OAuth2Adapter {
       return `https://www.facebook.com/v22.0/dialog/oauth?${params.toString()}`;
     }
   
-    async getTokenFromCode(code: string, redirect_uri: string): Promise<{ email: string, fullName: string, profilePictureUrl?: string }> {
+    async getTokenFromCode(code: string, redirect_uri: string): Promise<OAuth2UserInfoLocal> {
       // Exchange code for token
       const tokenResponse = await fetch('https://graph.facebook.com/v22.0/oauth/access_token', {
         method: 'POST',
@@ -43,7 +53,7 @@ export default class AdminForthAdapterFacebookOauth2 implements OAuth2Adapter {
       }
   
       // Get user info using access token
-      const userResponse = await fetch(`https://graph.facebook.com/me?fields=id,email&access_token=${tokenData.access_token}`, {
+      const userResponse = await fetch(`https://graph.facebook.com/me?fields=id,email,name,picture&access_token=${tokenData.access_token}`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
       });
@@ -55,13 +65,19 @@ export default class AdminForthAdapterFacebookOauth2 implements OAuth2Adapter {
       }
   
       return {
+        provider: this.constructor.name,
+        subject: userData.id,
         email: userData.email,
         fullName: userData.name,
         profilePictureUrl: userData.picture?.data?.url,
       };
     }
 
-getIcon(): string {
+    getName(): string {
+      return 'Facebook';
+    }
+
+    getIcon(): string {
   return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" version="1.1" id="svg9" viewBox="0 0 666.66668 666.66717">
   <defs id="defs13">
     <clipPath clipPathUnits="userSpaceOnUse" id="clipPath25">
