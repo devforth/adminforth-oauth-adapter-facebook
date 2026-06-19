@@ -1,15 +1,5 @@
-import type { OAuth2Adapter } from "adminforth";
+import type { OAuth2Adapter, OAuth2UserInfo } from "adminforth";
 
-type OAuth2UserInfoLocal = {
-  email: string;
-  provider?: string;
-  subject?: string;
-  phone?: string;
-  meta?: Record<string, any>;
-  fullName?: string;
-  profilePictureUrl?: string | null;
-  externalUserId?: string | number | null;
-};
 export default class AdminForthAdapterFacebookOauth2 implements OAuth2Adapter {
     private clientID: string;
     private clientSecret: string;
@@ -32,7 +22,7 @@ export default class AdminForthAdapterFacebookOauth2 implements OAuth2Adapter {
       return `https://www.facebook.com/v22.0/dialog/oauth?${params.toString()}`;
     }
   
-    async getTokenFromCode(code: string, redirect_uri: string): Promise<OAuth2UserInfoLocal> {
+    async getTokenFromCode(code: string, redirect_uri: string): Promise<OAuth2UserInfo> {
       // Exchange code for token
       const tokenResponse = await fetch('https://graph.facebook.com/v22.0/oauth/access_token', {
         method: 'POST',
